@@ -75,6 +75,11 @@ public class ChatServer {
 
         if (message.startsWith("/")) {
             // Processar comandos
+            if(message.length() > 1 && message.charAt(1) == '/'){
+                String subMessage = message.substring(1);
+                broadcastToRoom(state.room, "MESSAGE " + state.nickname + " " + subMessage, clientChannel);
+                return;
+            }
             String[] parts = message.split(" ", 2);
             String command = parts[0];
             String argument = parts.length > 1 ? parts[1] : "";
@@ -153,9 +158,6 @@ public class ChatServer {
     private static void handleMessage(SocketChannel clientChannel, ClientState state, String message) throws IOException {
         if (!"inside".equals(state.state)) {
             sendMessage(clientChannel, "ERROR");
-        } else {
-            String escapedMessage = message.replaceFirst("^/", "//");
-            broadcastToRoom(state.room, "MESSAGE " + state.nickname + " " + escapedMessage, clientChannel);
         }
     }
 
