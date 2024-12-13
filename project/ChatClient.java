@@ -75,7 +75,7 @@ public class ChatClient {
                     processarMensagem(mensagemServer);
                 }
             } catch (IOException e) {
-                printMensagem("Erro ao receber mensagens do servidor.\n");
+                printMensagem("Error.\n");
             }
         });
     }
@@ -85,36 +85,40 @@ public class ChatClient {
         if (mensagemServer.startsWith("MESSAGE")) {
             String[] parts = mensagemServer.split(" ", 3);
             if (parts.length >= 3) {
-                printMensagem(parts[1] + ": " + parts[2] + "\n");
+                String remetente = parts[1];
+                String conteudo = parts[2];
+                printMensagem(remetente + ": " + conteudo + "\n");
             }
         } else if (mensagemServer.startsWith("NEWNICK")) {
             String[] parts = mensagemServer.split(" ");
             if (parts.length >= 3) {
-                printMensagem(parts[1] + " mudou de nome para " + parts[2] + "\n");
+                printMensagem("NEWNICK " + parts[1] + " " + parts[2] + "\n");
             }
         } else if (mensagemServer.startsWith("JOINED")) {
             String[] parts = mensagemServer.split(" ");
             if (parts.length >= 2) {
-                printMensagem(parts[1] + " entrou na sala.\n");
+                printMensagem( "JOINED " + parts[1] + "\n");
             }
         } else if (mensagemServer.startsWith("LEFT")) {
             String[] parts = mensagemServer.split(" ");
             if (parts.length >= 2) {
-                printMensagem(parts[1] + " saiu da sala.\n");
+                printMensagem("LEFT " + parts[1] + "\n");
             }
         } else if (mensagemServer.startsWith("BYE")) {
-            printMensagem("Conexão encerrada pelo servidor.\n");
+            printMensagem("BYE\n");
             try {
                 socket.close();
             } catch (IOException e) {
-                printMensagem("Erro ao fechar conexão.\n");
+                printMensagem("Error\n");
             }
         } else if (mensagemServer.startsWith("ERROR")) {
-            printMensagem("Erro: " + mensagemServer + "\n");
+            printMensagem("Error \n");
         } else if (mensagemServer.startsWith("OK")) {
-            printMensagem("Comando executado com sucesso.\n");
+            printMensagem("OK\n");
         }
     }
+
+    
 
     public void printMensagem(final String message) {
         chatArea.append(message);

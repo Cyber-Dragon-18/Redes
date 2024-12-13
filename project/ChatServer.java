@@ -163,13 +163,13 @@ public class ChatServer {
         clientChannel.write(encoder.encode(CharBuffer.wrap(message + "\n")));
     }
 
+
     private static void broadcastToRoom(String room, String message, SocketChannel exclude) throws IOException {
         for (SocketChannel client : rooms.getOrDefault(room, Collections.emptySet())) {
-            if (client != exclude) {
-                sendMessage(client, message);
-            }
+            sendMessage(client, message);
         }
     }
+    
 
     private static void disconnectClient(SocketChannel clientChannel) throws IOException {
         ClientState state = clients.remove(clientChannel);
