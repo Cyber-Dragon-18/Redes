@@ -82,7 +82,7 @@ public class ChatServer {
             String[] parts = message.split(" ", 2);
             String command = parts[0];
             String argument = parts.length > 1 ? parts[1] : "";
-            String content = parts.length > 2 ? parts[2] : "";
+
 
             switch (command) {
                 case "/nick":
@@ -98,11 +98,11 @@ public class ChatServer {
                     handleBye(clientChannel);
                     break;
                 case "/priv":               
-                String[] privParts = message.split(" ", 3);
-                String privRecipient = privParts.length > 1 ? privParts[1] : "";
-                String privMessage = privParts.length > 2 ? privParts[2] : "";
-                handlePrivateMessage(clientChannel, state, privRecipient, privMessage);
-                break;
+                    String[] privParts = message.split(" ", 3);
+                    String privRecipient = privParts.length > 1 ? privParts[1] : "";
+                    String privMessage = privParts.length > 2 ? privParts[2] : "";
+                    handlePrivateMessage(clientChannel, state, privRecipient, privMessage);
+                    break;
                 default:
                     sendMessage(clientChannel, "ERROR");
             }
