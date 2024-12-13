@@ -55,14 +55,7 @@ public class ChatClient {
     }
 
     public void novaMensagem(String mensagem) throws IOException {
-        // Enviar a mensagem para o servidor
-        if (mensagem.startsWith("/")) {
-            // Comandos começam com "/"
-            out.println(mensagem);
-        } else {
-            // Mensagens simples
-            out.println(mensagem.replaceFirst("^/", "//")); // Aplicar escape se necessário
-        }
+        out.println(mensagem);
     }
 
     public void run() throws IOException {
