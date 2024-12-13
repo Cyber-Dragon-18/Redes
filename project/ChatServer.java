@@ -157,6 +157,8 @@ public class ChatServer {
     private static void handleMessage(SocketChannel clientChannel, ClientState state, String message) throws IOException {
         if (!"inside".equals(state.state)) {
             sendMessage(clientChannel, "ERROR");
+        } else{ 
+            broadcastToRoom(state.room, "MESSAGE " + state.nickname + " " + message, clientChannel);
         }
     }
 
