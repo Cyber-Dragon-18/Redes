@@ -82,6 +82,13 @@ public class ChatClient {
                 String conteudo = parts[2];
                 printMensagem(remetente + ": " + conteudo + "\n");
             }
+        } else if (mensagemServer.startsWith("PRIVATE")) {
+            String[] parts = mensagemServer.split(" ", 3);
+            if (parts.length >= 3) {
+                String remetente = parts[1];
+                String conteudo = parts[2];
+                printMensagem("Private " + remetente + ": " + conteudo + "\n");
+            }
         } else if (mensagemServer.startsWith("NEWNICK")) {
             String[] parts = mensagemServer.split(" ");
             if (parts.length >= 3) {

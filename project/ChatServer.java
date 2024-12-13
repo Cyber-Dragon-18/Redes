@@ -82,6 +82,7 @@ public class ChatServer {
             String[] parts = message.split(" ", 2);
             String command = parts[0];
             String argument = parts.length > 1 ? parts[1] : "";
+            String content = parts.length > 2 ? parts[2] : "";
 
             switch (command) {
                 case "/nick":
@@ -96,6 +97,12 @@ public class ChatServer {
                 case "/bye":
                     handleBye(clientChannel);
                     break;
+                case "/priv":               
+                String[] privParts = message.split(" ", 3);
+                String privRecipient = privParts.length > 1 ? privParts[1] : "";
+                String privMessage = privParts.length > 2 ? privParts[2] : "";
+                handlePrivateMessage(clientChannel, state, privRecipient, privMessage);
+                break;
                 default:
                     sendMessage(clientChannel, "ERROR");
             }
@@ -161,6 +168,38 @@ public class ChatServer {
             broadcastToRoom(state.room, "MESSAGE " + state.nickname + " " + message, clientChannel);
         }
     }
+
+    private static void handlePrivateMessage(SocketChannel clientChannel, ClientState state, String recipient, String message) throws IOException {
+
+    
+        // Validar se o comando possui argumentos válidos
+        if (recipient == null || recipient.isEmpty() || message == null || message.isEmpty()) {
+            sendMessage(clientChannel, "ERROR"); // Falha na sintaxe do comando
+            return;
+        }
+    
+        // Procurar o canal correspondente ao destinatário
+        SocketChannel recipientChannel = null;
+        for (Map.Entry<SocketChannel, ClientState> entry : clients.entrySet()) {
+            ClientState recipientState = entry.getValue();
+            if (recipientState != null && recipient.equals(recipientState.nickname)) {
+                recipientChannel = entry.getKey();
+                break;
+            }
+        }
+    
+        // Verificar se o destinatário foi encontrado
+        if (recipientChannel == null) {
+            sendMessage(clientChannel, "ERROR"); // Destinatário não encontrado
+        } else {
+            // Enviar mensagem privada para o destinatário
+            sendMessage(recipientChannel, "PRIVATE " + state.nickname + " " + message);
+            // Confirmar ao remetente que a mensagem foi enviada
+            sendMessage(clientChannel, "OK");
+        }
+    }
+    
+
 
     private static void sendMessage(SocketChannel clientChannel, String message) throws IOException {
         clientChannel.write(encoder.encode(CharBuffer.wrap(message + "\n")));
